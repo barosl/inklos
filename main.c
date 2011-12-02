@@ -1,6 +1,6 @@
 #define MULTIBOOT_BOOTLOADER_MAGIC 0x2BADB002
 
-void kkmain(void *mb_inf, unsigned int magic) {
+void kmain(void *mb_inf, unsigned int magic) {
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC) {
 		return;
 	}
