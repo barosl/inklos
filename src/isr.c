@@ -1,16 +1,20 @@
 #include "isr.h"
-#include <stdint.h>
 #include "video.h"
+#include "io.h"
 
-typedef struct {
-	uint32_t ds;
-	uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
-	uint32_t int_no, err_code;
-	uint32_t eip, cs, eflags, user_esp, ss;
-} regs_t;
+isr_t isrs[256];
 
 void isr_handler(regs_t regs) {
-	video_puts("Interrupted: ");
-	video_write_dec(regs.int_no);
-	video_putc('\n');
+	if (isrs[regs.int_no]) isrs[regs.int_no](regs);
+}
+
+void irq_handler(regs_t regs) {
+	if (regs.int_no >= 8+32) io_outb(0xA0, 0x20);
+	io_outb(0x20, 0x20);
+
+	if (isrs[regs.int_no]) isrs[regs.int_no](regs);
+}
+
+void isr_register(int no, isr_t isr) {
+	isrs[no] = isr;
 }
