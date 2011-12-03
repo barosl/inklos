@@ -3,7 +3,7 @@
 
 include config.mk
 
-CFLAGS = -std=gnu99 -Wall -Wc++-compat -Werror -fno-stack-protector
+CFLAGS = -std=gnu99 -Wall -Wc++-compat -fno-stack-protector -Werror
 
 SRC_DIR = src
 BIN_DIR = bin
