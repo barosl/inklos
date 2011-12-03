@@ -28,4 +28,4 @@ typedef struct {
 
 typedef void (*isr_t)(regs_t regs);
 
-extern void isr_register(int no, isr_t isr);
+extern void isr_reg(int no, isr_t isr);

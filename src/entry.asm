@@ -23,11 +23,13 @@ _start:
 	push eax
 	push ebx
 
+	cli
 	call kmain
+
+	jmp $
 
 	cli
 	hlt
-	jmp $
 
 section .bss
 
