@@ -9,7 +9,7 @@ static void timer_cb(regs_t *regs) {
 }
 
 static void timer_set_freq(int freq) {
-	int divisor = 1193180 / freq;
+	uint16_t divisor = 1193180 / freq;
 
 	io_outb(0x43, 0x36);
 
@@ -18,6 +18,8 @@ static void timer_set_freq(int freq) {
 }
 
 void timer_init() {
-	timer_set_freq(1000);
+	tick = 0;
+
 	isr_reg(IRQ0, timer_cb);
+	timer_set_freq(1000);
 }

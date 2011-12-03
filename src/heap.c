@@ -1,6 +1,6 @@
 #include "heap.h"
 
-extern uint32_t krnl_end;
+extern int krnl_end;
 
 uint32_t heap_placement_addr = (uint32_t)&krnl_end;
 

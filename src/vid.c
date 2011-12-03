@@ -10,7 +10,7 @@
 #define BLANK_CH (' ' | (cur_attr << 8))
 
 static int cur_x, cur_y;
-static int cur_attr = DEFAULT_ATTR;
+static int cur_attr;
 static uint16_t *vid_mem = (uint16_t*)0xB8000;
 
 static void vid_scroll() {
