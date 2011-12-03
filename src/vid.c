@@ -1,4 +1,4 @@
-#include "video.h"
+#include "vid.h"
 #include "mem.h"
 #include "io.h"
 #include <stdint.h>
@@ -11,19 +11,19 @@
 
 static int cur_x, cur_y;
 static int cur_attr = DEFAULT_ATTR;
-static uint16_t *video_mem = (uint16_t*)0xB8000;
+static uint16_t *vid_mem = (uint16_t*)0xB8000;
 
-static void video_scroll() {
+static void vid_scroll() {
 	if (cur_y < SCREEN_H) return;
 
 	int lines = (cur_y - SCREEN_H) + 1;
-	memcpy(video_mem, video_mem + lines*SCREEN_W, (SCREEN_H-lines)*SCREEN_W*sizeof(*video_mem));
-	wmemset(video_mem + (SCREEN_H-lines)*SCREEN_W, BLANK_CH, SCREEN_W);
+	memcpy(vid_mem, vid_mem + lines*SCREEN_W, (SCREEN_H-lines)*SCREEN_W*sizeof(*vid_mem));
+	wmemset(vid_mem + (SCREEN_H-lines)*SCREEN_W, BLANK_CH, SCREEN_W);
 
 	cur_y = SCREEN_H - 1;
 }
 
-static void video_update_cur() {
+static void vid_update_cur() {
 	uint16_t pos = cur_x + cur_y*SCREEN_W;
 
 	io_outb(0x3D4, 0xE);
@@ -32,23 +32,23 @@ static void video_update_cur() {
 	io_outb(0x3D5, pos & 0xFF);
 }
 
-void video_clear() {
+void vid_clear() {
 	cur_x = cur_y = 0;
 	cur_attr = DEFAULT_ATTR;
 
-	wmemset(video_mem, BLANK_CH, SCREEN_W*SCREEN_H);
+	wmemset(vid_mem, BLANK_CH, SCREEN_W*SCREEN_H);
 
-	video_update_cur();
+	vid_update_cur();
 }
 
-void video_putc(char ch) {
+void vid_putc(char ch) {
 	if (ch == '\r') {
 		cur_x = 0;
 	} else if (ch == '\n') {
 		cur_x = 0;
 		cur_y++;
 	} else {
-		video_mem[cur_x + cur_y*SCREEN_W] = ch | (cur_attr << 8);
+		vid_mem[cur_x + cur_y*SCREEN_W] = ch | (cur_attr << 8);
 		cur_x++;
 	}
 
@@ -57,19 +57,19 @@ void video_putc(char ch) {
 		cur_y++;
 	}
 
-	video_scroll();
-	video_update_cur();
+	vid_scroll();
+	vid_update_cur();
 }
 
-void video_puts(char *text) {
-	while (*text) video_putc(*text++);
+void vid_puts(char *text) {
+	while (*text) vid_putc(*text++);
 }
 
-void video_init() {
-	video_clear();
+void vid_init() {
+	vid_clear();
 }
 
-void video_write_dec(int num) {
+void vid_write_dec(int num) {
 	char num_s[sizeof(int)*8+2];
 	char *num_s_ptr = num_s;
 
@@ -88,6 +88,6 @@ void video_write_dec(int num) {
 		*num_s_ptr++ = '0';
 	}
 
-	if (is_neg) video_putc('-');
-	while (--num_s_ptr >= num_s) video_putc(*num_s_ptr);
+	if (is_neg) vid_putc('-');
+	while (--num_s_ptr >= num_s) vid_putc(*num_s_ptr);
 }
