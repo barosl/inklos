@@ -1,6 +1,8 @@
 #include "video.h"
 #include "mem.h"
 #include "io.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #define SCREEN_W 80
 #define SCREEN_H 25
@@ -9,7 +11,7 @@
 
 static int cur_x, cur_y;
 static int cur_attr = DEFAULT_ATTR;
-static unsigned short *video_mem = (unsigned short*)0xB8000;
+static uint16_t *video_mem = (uint16_t*)0xB8000;
 
 static void video_scroll() {
 	if (cur_y < SCREEN_H) return;
@@ -20,7 +22,7 @@ static void video_scroll() {
 }
 
 static void video_update_cur() {
-	unsigned short pos = cur_x + cur_y*SCREEN_W;
+	uint16_t pos = cur_x + cur_y*SCREEN_W;
 
 	io_outb(0x3D4, 0xE);
 	io_outb(0x3D5, (pos >> 8) & 0xFF);
@@ -37,7 +39,7 @@ void video_clear() {
 	video_update_cur();
 }
 
-void video_putc(unsigned char ch) {
+void video_putc(char ch) {
 	if (ch == '\r') {
 		cur_x = 0;
 	} else if (ch == '\n') {
@@ -57,10 +59,29 @@ void video_putc(unsigned char ch) {
 	video_update_cur();
 }
 
-void video_puts(unsigned char *text) {
+void video_puts(char *text) {
 	while (*text) video_putc(*text++);
 }
 
 void video_init() {
 	video_clear();
+}
+
+void video_write_dec(int num) {
+	char num_s[sizeof(int)*8+2];
+	char *num_s_ptr = num_s;
+
+	bool is_neg = false;
+	if (num < 0) {
+		is_neg = true;
+		num = -num;
+	}
+
+	while (num) {
+		*num_s_ptr++ = '0' + num % 10;
+		num /= 10;
+	}
+
+	if (is_neg) video_putc('-');
+	while (--num_s_ptr >= num_s) video_putc(*num_s_ptr);
 }
