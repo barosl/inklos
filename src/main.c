@@ -31,7 +31,7 @@ void kmain(void *mb_inf, unsigned int magic) {
 	kb_init();
 	page_init();
 
-	uint32_t *ptr = (uint32_t*)0x0FFFFD;
+	uint32_t *ptr = (uint32_t*)0x1FFFFD;
 	uint32_t tmp = *ptr;
 	(void)tmp;
 

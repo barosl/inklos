@@ -118,7 +118,7 @@ void page_init() {
 	memset(page_krnl_dir, 0, sizeof(*page_krnl_dir));
 
 	uint32_t addr = 0;
-	while (addr < 0x100000) {
+	while (addr < heap_placement_addr) {
 		frm_alloc(page_get(addr, 1, page_krnl_dir), 0, 0);
 		addr += 0x1000;
 	}

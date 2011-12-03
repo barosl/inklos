@@ -1,9 +1,9 @@
 ENTRY (_start)
 
 SECTIONS {
-	/*. = 0x00100000;*/
+	. = 0x00100000;
 
-	.text : {
+	.text ALIGN(0x1000) : {
 		*(.text)
 	}
 
@@ -17,7 +17,7 @@ SECTIONS {
 		*(.data)
 	}
 
-	.bss : {
+	.bss ALIGN(0x1000) : {
 		/*(COMMON)*/
 		*(.bss)
 	}
