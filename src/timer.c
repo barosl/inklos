@@ -5,7 +5,7 @@
 static int32_t tick;
 
 #include "video.h"
-static void timer_cb(regs_t regs) {
+static void timer_cb(regs_t *regs) {
 	tick++;
 
 	if (tick % 1000 == 0) {

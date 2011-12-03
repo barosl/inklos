@@ -87,9 +87,13 @@ IRQ 15, 47
 	mov es, ax
 	mov fs, ax
 	mov gs, ax
+
+	push esp
 %endmacro
 
 %macro COMM_FOOTER 0
+	pop eax
+
 	pop eax
 	mov ds, ax
 	mov es, ax

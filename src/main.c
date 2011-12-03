@@ -5,9 +5,9 @@
 
 #define MULTIBOOT_BOOTLOADER_MAGIC 0x2BADB002
 
-static void test_isr(regs_t regs) {
+static void test_isr(regs_t *regs) {
 	video_puts("Interrupted: ");
-	video_write_dec(regs.int_no);
+	video_write_dec(regs->int_no);
 	video_putc('\n');
 }
 

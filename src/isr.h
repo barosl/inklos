@@ -26,6 +26,6 @@ typedef struct {
 	uint32_t eip, cs, eflags, user_esp, ss;
 } regs_t;
 
-typedef void (*isr_t)(regs_t regs);
+typedef void (*isr_t)(regs_t *regs);
 
 extern void isr_reg(int no, isr_t isr);
