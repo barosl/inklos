@@ -1,6 +1,7 @@
 #include "kb.h"
 #include "isr.h"
 #include "io.h"
+#include <stdint.h>
 
 char kb_us[] = {
 	0, 27, '1', '2', '3', '4', '5', '6', '7', '8',
