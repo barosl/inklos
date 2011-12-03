@@ -2,6 +2,7 @@
 #include "desc_tbls.h"
 #include "isr.h"
 #include "timer.h"
+#include "kb.h"
 
 #define MULTIBOOT_BOOTLOADER_MAGIC 0x2BADB002
 
@@ -26,4 +27,5 @@ void kmain(void *mb_inf, unsigned int magic) {
 	asm volatile("int $0x4");
 
 	timer_init();
+	kb_init();
 }
