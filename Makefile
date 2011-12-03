@@ -1,24 +1,27 @@
 .PHONY: c clean
+.SUFFIXES: .asm
 
-NAME = inklos
+include config.mk
+
+CFLAGS = -std=gnu99 -Wall -Wc++-compat -fno-stack-protector
 
 TARGET = $(NAME).bin
-SRCS = $(wildcard *.[cs])
-OBJS = $(subst .s,.o,$(SRCS:.c=.o))
+SRCS = $(wildcard *.c) $(wildcard *.asm)
+OBJS = $(subst .asm,.o,$(SRCS:.c=.o))
 
 $(TARGET): $(OBJS)
 	ld -melf_i386 -T linker.ld -o $@ $+
 
-entry.o: entry.s
-	nasm -f elf32 -o entry.o entry.s
+.asm.o:
+	nasm -f elf32 $<
 
 .c.o:
-	gcc -m32 -c $< -std=gnu99
+	gcc -m32 -c $< $(CFLAGS)
 
 c: clean
 clean:
 	rm -f $(TARGET) $(OBJS)
 
 r: run
-run:
+run: $(TARGET)
 	qemu -kernel $(TARGET)
