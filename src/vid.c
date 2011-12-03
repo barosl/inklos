@@ -11,14 +11,14 @@
 
 static int cur_x, cur_y;
 static int cur_attr;
-static uint16_t *vid_mem = (uint16_t*)0xB8000;
+static volatile uint16_t *vid_mem = (uint16_t*)0xB8000;
 
 static void vid_scroll() {
 	if (cur_y < SCREEN_H) return;
 
 	int lines = (cur_y - SCREEN_H) + 1;
-	memcpy(vid_mem, vid_mem + lines*SCREEN_W, (SCREEN_H-lines)*SCREEN_W*sizeof(*vid_mem));
-	wmemset(vid_mem + (SCREEN_H-lines)*SCREEN_W, BLANK_CH, SCREEN_W);
+	memcpy((uint16_t*)vid_mem, (uint16_t*)vid_mem + lines*SCREEN_W, (SCREEN_H-lines)*SCREEN_W*sizeof(*vid_mem));
+	wmemset((uint16_t*)vid_mem + (SCREEN_H-lines)*SCREEN_W, BLANK_CH, SCREEN_W);
 
 	cur_y = SCREEN_H - 1;
 }
@@ -36,7 +36,7 @@ void vid_clear() {
 	cur_x = cur_y = 0;
 	cur_attr = DEFAULT_ATTR;
 
-	wmemset(vid_mem, BLANK_CH, SCREEN_W*SCREEN_H);
+	wmemset((uint16_t*)vid_mem, BLANK_CH, SCREEN_W*SCREEN_H);
 
 	vid_update_cur();
 }
