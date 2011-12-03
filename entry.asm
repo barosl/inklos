@@ -1,4 +1,5 @@
 global _start
+
 extern kmain
 
 STACK_SIZE equ 0x4000
