@@ -19,6 +19,8 @@ static void video_scroll() {
 	int lines = (cur_y - SCREEN_H) + 1;
 	memcpy(video_mem, video_mem + lines*SCREEN_W, (SCREEN_H-lines)*SCREEN_W*sizeof(*video_mem));
 	wmemset(video_mem + (SCREEN_H-lines)*SCREEN_W, BLANK_CH, SCREEN_W);
+
+	cur_y = SCREEN_H - 1;
 }
 
 static void video_update_cur() {
@@ -77,9 +79,13 @@ void video_write_dec(int num) {
 		num = -num;
 	}
 
-	while (num) {
-		*num_s_ptr++ = '0' + num % 10;
-		num /= 10;
+	if (num) {
+		while (num) {
+			*num_s_ptr++ = '0' + num % 10;
+			num /= 10;
+		}
+	} else {
+		*num_s_ptr++ = '0';
 	}
 
 	if (is_neg) video_putc('-');
