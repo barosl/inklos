@@ -3,6 +3,7 @@
 #include "isr.h"
 #include "timer.h"
 #include "kb.h"
+#include "page.h"
 
 #define MULTIBOOT_BOOTLOADER_MAGIC 0x2BADB002
 
@@ -28,4 +29,11 @@ void kmain(void *mb_inf, unsigned int magic) {
 
 	timer_init();
 	kb_init();
+	page_init();
+
+	uint32_t *ptr = (uint32_t*)0x0FFFFD;
+	uint32_t tmp = *ptr;
+	(void)tmp;
+
+	vid_puts("kmain() ended.\n");
 }
