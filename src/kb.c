@@ -14,12 +14,13 @@ char kb_us[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-#include "video.h"
 void kb_handler(regs_t *regs) {
 	uint8_t scan_code = io_inb(0x60);
 
 	if (!(scan_code & 0x80)) {
-		video_putc(kb_us[scan_code]);
+		char ch = kb_us[scan_code];
+
+		(void)ch;
 	}
 }
 

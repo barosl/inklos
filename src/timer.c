@@ -4,15 +4,8 @@
 
 static int32_t tick;
 
-#include "video.h"
 static void timer_cb(regs_t *regs) {
 	tick++;
-
-	if (tick % 1000 == 0) {
-		video_puts("Tick: ");
-		video_write_dec(tick/1000);
-		video_putc('\n');
-	}
 }
 
 static void timer_set_freq(int freq) {
