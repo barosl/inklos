@@ -69,15 +69,17 @@ void vid_init() {
 	vid_clear();
 }
 
-void vid_write_dec(int num) {
-	char num_s[sizeof(int)*8+2];
+void vid_write_dec(unsigned int num) {
+	char num_s[12];
 	char *num_s_ptr = num_s;
 
+	/*
 	bool is_neg = false;
 	if (num < 0) {
 		is_neg = true;
 		num = -num;
 	}
+	*/
 
 	if (num) {
 		while (num) {
@@ -88,6 +90,7 @@ void vid_write_dec(int num) {
 		*num_s_ptr++ = '0';
 	}
 
-	if (is_neg) vid_putc('-');
+//	if (is_neg) vid_putc('-');
+
 	while (--num_s_ptr >= num_s) vid_putc(*num_s_ptr);
 }
