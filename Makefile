@@ -1,7 +1,7 @@
 .PHONY: c clean
 .SUFFIXES: .asm
 
-include config.mk
+include cfg.mk
 
 CFLAGS = -std=gnu99 -Wall -Wc++-compat -fno-stack-protector -Werror
 
