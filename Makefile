@@ -12,7 +12,7 @@ SRCS = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/*.asm)
 OBJS = $(subst .asm,.o,$(SRCS:.c=.o))
 
 $(TARGET): $(OBJS)
-	ld -melf_i386 -T linker.ld -o $@ $+
+	ld -melf_i386 -T $(SRC_DIR)/linker.ld -o $@ $+
 
 .asm.o:
 	nasm -f elf32 -o $@ $<
