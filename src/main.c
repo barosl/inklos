@@ -1,5 +1,6 @@
 #include "vid.h"
-#include "desc_tbls.h"
+#include "segment.h"
+#include "interrupt.h"
 #include "isr.h"
 #include "timer.h"
 #include "kb.h"
@@ -16,7 +17,11 @@ static void test_isr(regs_t *regs) {
 void kmain(void *mb_inf, unsigned int magic) {
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC) return;
 
-	desc_tbls_init();
+	segment_init();
+	page_init();
+	interrupt_init();
+	timer_init();
+	kb_init();
 	vid_init();
 
 	for (int i=0;i<16;i++) isr_reg(i, test_isr);
@@ -26,10 +31,6 @@ void kmain(void *mb_inf, unsigned int magic) {
 
 	asm volatile("int $0x3");
 	asm volatile("int $0x4");
-
-	timer_init();
-	kb_init();
-	page_init();
 
 	uint32_t *ptr = (uint32_t*)0x1FFFFD;
 	uint32_t tmp = *ptr;

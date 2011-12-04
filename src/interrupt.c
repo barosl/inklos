@@ -1,10 +1,7 @@
-#include "desc_tbls.h"
+#include "interrupt.h"
 #include <stdint.h>
 #include "mem.h"
 #include "io.h"
-
-extern void gdt_flush(uint32_t gdt_ptr);
-extern void idt_flush(uint32_t gdt_ptr);
 
 extern void isr0(); extern void isr1(); extern void isr2(); extern void isr3(); extern void isr4(); extern void isr5(); extern void isr6(); extern void isr7();
 extern void isr8(); extern void isr9(); extern void isr10(); extern void isr11(); extern void isr12(); extern void isr13(); extern void isr14(); extern void isr15();
@@ -24,47 +21,7 @@ static const void (*isrs[]) = {
 	irq8, irq9, irq10, irq11, irq12, irq13, irq14, irq15,
 };
 
-typedef struct {
-	uint16_t limit_low;
-	uint16_t base_low;
-	uint8_t base_mid;
-	uint8_t access;
-	uint8_t gran;
-	uint8_t base_high;
-} __attribute__((packed)) gdt_ent_t;
-
-typedef struct {
-	uint16_t limit;
-	uint32_t base;
-} __attribute__((packed)) gdt_ptr_t;
-
-gdt_ent_t gdt[5];
-gdt_ptr_t gdt_ptr;
-
-static void gdt_set_gate(int idx, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran) {
-	gdt[idx].base_low = base & 0xFFFF;
-	gdt[idx].base_mid = (base >> 16) & 0xFF;
-	gdt[idx].base_high = (base >> 24) & 0xFF;
-
-	gdt[idx].limit_low = limit & 0xFFFF;
-	gdt[idx].gran = (limit >> 16) & 0x0F;
-
-	gdt[idx].gran |= gran & 0xF0;
-	gdt[idx].access = access;
-}
-
-static void gdt_init() {
-	gdt_ptr.limit = sizeof(gdt)-1;
-	gdt_ptr.base = (uint32_t)&gdt;
-
-	gdt_set_gate(0, 0, 0, 0, 0);
-	gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
-	gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
-	gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
-	gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
-
-	gdt_flush((uint32_t)&gdt_ptr);
-}
+extern void idt_flush(uint32_t gdt_ptr);
 
 typedef struct {
 	uint16_t base_low;
@@ -93,7 +50,7 @@ static void idt_set_gate(int idx, uint32_t base, uint16_t sel, uint8_t flags) {
 	idt[idx].flags = flags/* | 0x60*/;
 }
 
-static void idt_init() {
+void interrupt_init() {
 	idt_ptr.limit = sizeof(idt)-1;
 	idt_ptr.base = (uint32_t)&idt;
 
@@ -115,11 +72,6 @@ static void idt_init() {
 	}
 
 	idt_flush((uint32_t)&idt_ptr);
-}
-
-void desc_tbls_init() {
-	gdt_init();
-	idt_init();
 
 	asm volatile("sti");
 }
