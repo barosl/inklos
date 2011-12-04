@@ -17,14 +17,15 @@ static void test_isr(regs_t *regs) {
 void kmain(void *mb_inf, unsigned int magic) {
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC) return;
 
+	vid_init();
 	segment_init();
-	page_init();
 	interrupt_init();
 	timer_init();
 	kb_init();
-	vid_init();
 
 	for (int i=0;i<16;i++) isr_reg(i, test_isr);
+
+	page_init();
 
 	vid_puts("Hello, world!\n");
 	vid_puts("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\n");
