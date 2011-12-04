@@ -14,6 +14,10 @@ void irq_handler(regs_t *regs) {
 	if (isrs[regs->int_no]) isrs[regs->int_no](regs);
 }
 
-void isr_reg(int no, isr_t isr) {
-	isrs[no] = isr;
+void isr_reg(int int_no, isr_t isr) {
+	isrs[int_no] = isr;
+}
+
+void isr_unreg(int int_no) {
+	isrs[int_no] = 0;
 }
