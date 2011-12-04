@@ -17,7 +17,7 @@ $(TARGET): $(OBJS)
 .asm.o:
 	nasm -f elf32 -o $@ $<
 
-.c.o:
+.c.o %.o: %.c %.h
 	gcc -m32 -c -o $@ $< $(CFLAGS)
 
 c: clean
