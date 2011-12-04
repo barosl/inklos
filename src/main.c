@@ -1,6 +1,6 @@
 #include "vid.h"
-#include "segment.h"
-#include "interrupt.h"
+#include "seg.h"
+#include "intr.h"
 #include "isr.h"
 #include "timer.h"
 #include "kb.h"
@@ -9,7 +9,7 @@
 #define MULTIBOOT_BOOTLOADER_MAGIC 0x2BADB002
 
 static void test_isr(regs_t *regs) {
-	vid_puts("Interrupted: ");
+	vid_puts("intred: ");
 	vid_write_dec(regs->int_no);
 	vid_putc('\n');
 }
@@ -18,8 +18,8 @@ void kmain(void *mb_inf, unsigned int magic) {
 	if (magic != MULTIBOOT_BOOTLOADER_MAGIC) return;
 
 	vid_init();
-	segment_init();
-	interrupt_init();
+	seg_init();
+	intr_init();
 	timer_init();
 	kb_init();
 

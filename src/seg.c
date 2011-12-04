@@ -1,4 +1,4 @@
-#include "segment.h"
+#include "seg.h"
 #include <stdint.h>
 
 extern void gdt_flush(uint32_t gdt_ptr);
@@ -32,7 +32,7 @@ static void gdt_set_gate(int idx, uint32_t base, uint32_t limit, uint8_t access,
 	gdt[idx].access = access;
 }
 
-void segment_init() {
+void seg_init() {
 	gdt_ptr.limit = sizeof(gdt)-1;
 	gdt_ptr.base = (uint32_t)&gdt;
 

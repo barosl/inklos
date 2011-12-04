@@ -1,4 +1,4 @@
-#include "interrupt.h"
+#include "intr.h"
 #include <stdint.h>
 #include "mem.h"
 #include "io.h"
@@ -50,7 +50,7 @@ static void idt_set_gate(int idx, uint32_t base, uint16_t sel, uint8_t flags) {
 	idt[idx].flags = flags/* | 0x60*/;
 }
 
-void interrupt_init() {
+void intr_init() {
 	idt_ptr.limit = sizeof(idt)-1;
 	idt_ptr.base = (uint32_t)&idt;
 
